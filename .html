@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura de Ubicación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compartir Ubicación</h1>
+        <button onclick="solicitarUbicacion()">Compartir mi ubicación</button>
+    </div>
+    <script>
+        function solicitarUbicacion() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(enviarUbicacion);
+            } else {
+                alert("La geolocalización no es compatible con este navegador.");
+            }
+        }
+
+        function enviarUbicacion(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            fetch('https://tuservidor.repl.co/guardar-ubicacion', { // Reemplaza esta URL con la URL de tu servidor
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lon })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Ubicación guardada exitosamente.');
+                } else {
+                    alert('Error al guardar la ubicación.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al enviar la solicitud.');
+            });
+        }
+    </script>
+</body>
+</html>
